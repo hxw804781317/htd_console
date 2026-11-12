@@ -49,8 +49,16 @@ void app_console_init(void)
         app_console_write((const uint8_t*)"htd console process init success.", 33);
         htd_console_print("htd console init finish: %s\r\n", HTD_CONSOLE_SERIAL_NAME);
     }
+    
     // 轮询给控制台喂数据
     htd_task_load_timer_function(true, 50, app_console_loop_handle, NULL);
+}
+
+// @brief 去初始化
+void app_console_uninit(void)
+{
+    // 销毁定时任务
+    htd_task_unload_timer_function(app_console_loop_handle);
 }
 
 // @brief 刷新控制台数据

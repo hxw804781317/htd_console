@@ -10,16 +10,18 @@
 extern "C" {
 #endif /*__cplusplus*/
 
-
+// 控制台设备名字
 #ifndef HTD_CONSOLE_SERIAL_NAME
     #define HTD_CONSOLE_SERIAL_NAME             "segger_rtt"
 #endif
+// 控制串口引脚
 #ifndef HTD_CONSOLE_SERIAL_TX_PINNUM
     #define HTD_CONSOLE_SERIAL_TX_PINNUM        0x09
 #endif
 #ifndef HTD_CONSOLE_SERIAL_RX_PINNUM
     #define HTD_CONSOLE_SERIAL_RX_PINNUM        0x0a
 #endif
+// 控制台串口波特率
 #ifndef HTD_CONSOLE_SERIAL_BAUDRATE
     #define HTD_CONSOLE_SERIAL_BAUDRATE         1000000
 #endif
@@ -27,6 +29,8 @@ extern "C" {
 
 // @brief 控制台初始化
 void app_console_init(void);
+// @brief 去初始化
+void app_console_uninit(void);
 // @brief 刷新控制台数据
 // @brief 等待RTT缓冲区数据发送完毕, 此函数会阻塞CPU，直到数据被读走或超时
 int32_t app_console_tx_flush(uint32_t timeout_ms);
