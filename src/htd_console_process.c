@@ -3,8 +3,6 @@
 #include "htd_console_process.h"
 #include "htd_console_history.h"
 
-
-
 #if defined(HTD_CONSOLE_SUPPORT_CMD)
 //////////////////////////////////////////////////////////////////////
 HTD_SECTION_DEF(CONSOLE_SECTION_NAME, csl_cmd_cb_t);
@@ -21,7 +19,7 @@ static int console_help_cmd(int argc, char **argv)
     p_item = htd_section_first_item_get(m_htd_console.cmd_table_begin, m_htd_console.cmd_table_end);
     while (p_item) {
         p_shell = (csl_cmd_cb_t*)p_item;
-        if (strncmp(p_shell->p_name, "_cmd_", 5) == 0) {
+        if (MEMCMP(p_shell->p_name, "_cmd_", 6) == 0) {
             htd_console_print("%s \r\n", &p_shell->p_name[5]);
         }
         p_item = htd_section_next_item_get(p_item, m_htd_console.cmd_table_end, sizeof(csl_cmd_cb_t));
@@ -45,7 +43,7 @@ static int console_split(char *cmd, uint32_t cmd_len, char *argv[HTD_CONSOLE_ARG
 {
     char *ptr = cmd;
     uint32_t position = 0;
-    uint32_t argc = 0;
+    uint32_t argc = 0, i;
     while (position < cmd_len) {
         // 跳过空格和tab键
         while ((*ptr == ' ' || *ptr == '\t') && position < cmd_len) {
@@ -56,7 +54,7 @@ static int console_split(char *cmd, uint32_t cmd_len, char *argv[HTD_CONSOLE_ARG
 
         if (argc >= HTD_CONSOLE_ARG_MAX) {
             htd_console_print("Too many args! only Use:");
-            for (uint32_t i=0; i<argc; i++) {
+            for (i=0; i<argc; i++) {
                 htd_console_print("%s ", argv[i]);
             }
             htd_console_print("\r\n");
@@ -118,8 +116,8 @@ static cmd_function_t console_shell_cmd_get(const char *cmd, int size)
     while (p_item) {
         p_shell = (csl_cmd_cb_t*)p_item;
         //htd_console_print("p_name=%s\n", p_shell->p_name);
-        if (strncmp(p_shell->p_name, "_cmd_", 5) == 0) {
-            if (strncmp(&p_shell->p_name[5], cmd, size) == 0 && p_shell->p_name[5 + size] == '\0') {
+        if (MEMCMP(p_shell->p_name, "_cmd_", 6) == 0) {
+            if (MEMCMP(&p_shell->p_name[5], cmd, size) == 0 && p_shell->p_name[5 + size] == '\0') {
                 //htd_console_print("p_name=%s\n", p_shell->p_name);
                 cmd_func = p_shell->func;
                 break;
@@ -243,7 +241,7 @@ void htd_auto_complete_path(char *path)
             if (dirent == NULL) {
                 break;
             }
-            if (memcmp(p_index, dirent->d_name, index_len) == 0) {
+            if (MEMCMP(p_index, dirent->d_name, index_len) == 0) {
                 if (dirent->d_type == DT_DIR) {       // 文件夹
                     htd_console_print("\t\033[0;35m%s\n\033[0m", dirent->d_name);
                 } else {
@@ -286,9 +284,9 @@ void htd_console_auto_complete(char *prefix)
     const uint32_t* p_item = htd_section_first_item_get(m_htd_console.cmd_table_begin, m_htd_console.cmd_table_end);
     while (p_item) {
         p_shell = (csl_cmd_cb_t*)p_item;
-        if (memcmp(p_shell->p_name, "_cmd_", 5) == 0) {
+        if (MEMCMP(p_shell->p_name, "_cmd_", 5) == 0) {
             p_cmd_name = (const char *)&p_shell->p_name[5];
-            if (memcmp(prefix, p_cmd_name, prefix_len) == 0) {
+            if (MEMCMP(prefix, p_cmd_name, prefix_len) == 0) {
                 // 查找最短的命令
                 if (min_length == 0) {
                     p_name = p_cmd_name;
@@ -433,7 +431,7 @@ void htd_console_process_loop(uint8_t ch)
         p_console->line_curpos--;
 
         if (p_console->line_position > p_console->line_curpos) {
-            memmove(&p_console->line[p_console->line_curpos],
+            MEMMOVE(&p_console->line[p_console->line_curpos],
                     &p_console->line[p_console->line_curpos + 1],
                     p_console->line_position - p_console->line_curpos);
             p_console->line[p_console->line_position] = 0;
@@ -471,7 +469,7 @@ void htd_console_process_loop(uint8_t ch)
     
     // 正常字符
     if (p_console->line_curpos < p_console->line_position) {
-        memmove(&p_console->line[p_console->line_curpos + 1], 
+        MEMMOVE(&p_console->line[p_console->line_curpos + 1], 
                 &p_console->line[p_console->line_curpos], 
                 p_console->line_position - p_console->line_curpos);
         p_console->line[p_console->line_curpos] = ch;
@@ -599,5 +597,4 @@ uint32_t htd_console_fprintf(char const *p_fmt, va_list *p_args)
     return htd_vfprintf(&ctx, p_fmt, p_args);
 }
 #endif /*HTD_CONSOLE_SUPPORT_CMD*/
-
 

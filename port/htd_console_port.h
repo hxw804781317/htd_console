@@ -3,7 +3,13 @@
 #ifndef _HTD_CONSOLE_PORT_H_
 #define _HTD_CONSOLE_PORT_H_
 
-#include "htd_task.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,6 +17,8 @@ extern "C" {
 
 
 //////////////////////////////////////////////////////////////////////
+#include "htd_task.h"
+
 // 是否支持命令输入
 //#define HTD_CONSOLE_SUPPORT_CMD                 1
 // 是否支持命令存储
@@ -28,18 +36,9 @@ extern "C" {
 #ifndef HTD_CONSOLE_ARG_MAX
     #define HTD_CONSOLE_ARG_MAX                 8
 #endif
-#ifndef HTD_CONSOLE_SERIAL_NAME
-    #define HTD_CONSOLE_SERIAL_NAME             "segger_rtt"
-#endif
-#ifndef HTD_CONSOLE_SERIAL_TX_PINNUM
-    #define HTD_CONSOLE_SERIAL_TX_PINNUM        0x09
-#endif
-#ifndef HTD_CONSOLE_SERIAL_RX_PINNUM
-    #define HTD_CONSOLE_SERIAL_RX_PINNUM        0x0a
-#endif
-#ifndef HTD_CONSOLE_SERIAL_BAUDRATE
-    #define HTD_CONSOLE_SERIAL_BAUDRATE         1000000
-#endif
+
+
+
 
 
 
@@ -52,6 +51,12 @@ extern "C" {
 #endif
 #ifndef MEMCPY
     #define MEMCPY(dst, src, n)                 htd_memcpy(dst, src, n)
+#endif
+#ifndef MEMMOVE
+    #define MEMMOVE(dst, src, n)                htd_memmove(dst, src, n)
+#endif
+#ifndef MEMCMP
+    #define MEMCMP(v1, v2, n)                   htd_memcmp(v1, v2, n)
 #endif
 #ifndef MALLOC
     #define MALLOC(size)                        htd_malloc(size)
@@ -74,20 +79,6 @@ extern "C" {
 #ifndef STRINGIFY
     #define STRINGIFY(val)                      STR(val)
 #endif 
-
-
-
-//////////////////////////////////////////////////////////////////////
-// @brief 初始化控制台(打开字符输出)
-int32_t app_console_init(void);
-// @brief 控制台开始接收数据
-void app_console_read_start(void);
-// @brief 去初始化控制台
-int32_t app_console_uninit(void);
-// @brief 刷新
-// @return 返回0说明已经刷新完毕，返回大于0，表示还有多长数据要发送
-int32_t app_console_tx_flush(uint32_t waite_timeout_ms);
-
 
 
 #ifdef __cplusplus

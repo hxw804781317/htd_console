@@ -94,12 +94,14 @@ void console_key_down(htd_console_t *p_console)
     // 往后挪一个节点
     htd_slist_node_t *p_node = p_console->history_current->node.next;
     if (p_node == NULL) {
-        return;
+        p_console->history_current = NULL;
+        MEMSET(p_console->line, 0, sizeof(p_console->line));
+        p_console->line_curpos = p_console->line_position = 0;
+    } else {
+        p_console->history_current = htd_slist_entry(p_node, history_cmd_t, node);
+        MEMCPY(p_console->line, p_console->history_current->history_cmd, HTD_CONSOLE_CMD_SIZE);
+        p_console->line_curpos = p_console->line_position = strlen(p_console->line);
     }
-    
-    p_console->history_current = htd_slist_entry(p_node, history_cmd_t, node);
-    MEMCPY(p_console->line, p_console->history_current->history_cmd, HTD_CONSOLE_CMD_SIZE);
-    p_console->line_curpos = p_console->line_position = strlen(p_console->line);
     console_print_history(p_console);
 #endif
 }

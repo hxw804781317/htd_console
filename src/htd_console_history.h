@@ -3,7 +3,14 @@
 #ifndef _HTD_CONSOLE_HISTORY_H_
 #define _HTD_CONSOLE_HISTORY_H_
 
-#include "htd_common.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include "htd_console_port.h"
 #include "htd_console_process.h"
 
 #ifdef __cplusplus

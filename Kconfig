@@ -5,37 +5,12 @@ menuconfig HTD_CONSOLE_ENABLE
         config HTD_CONSOLE_NAME
             string "The console name"
             default "htd"
-        config HTD_CONSOLE_USING_THREAD
-            depends on !BSP_USING_NONOS
-            bool "The console use thread."
-            default 0
-        config HTD_CONSOLE_THREAD_PRIORITY
-            depends on HTD_CONSOLE_USING_THREAD
-            int "console thread priority."
-            default 28
-        config HTD_CONSOLE_THREAD_STACK_SIZE
-            depends on HTD_CONSOLE_USING_THREAD
-            int "console thread stack size."
-            default 2048
-			
-		config HTD_CONSOLE_SERIAL_NAME
-            string "Serial name"
-            default "uart1"
-        config HTD_CONSOLE_SERIAL_TX_PINNUM
-            hex "Serial tx pin-number"
-            default 0x09
-        config HTD_CONSOLE_SERIAL_RX_PINNUM
-            hex "Serial rx pin-number"
-            default 0x0A
-        config HTD_CONSOLE_SERIAL_BAUDRATE
-            int "Serial baudrate"
-            default 115200
-        
+			        
         config HTD_CONSOLE_SUPPORT_CMD
-            bool "support command"
+            bool "support command input."
             default y
         config HTD_CONSOLE_SUPPORT_CMD_HISTORY
-            depends on  HTD_CONSOLE_SUPPORT_CMD
+            depends on HTD_CONSOLE_SUPPORT_CMD
             bool "support command history"
             default y
         config HTD_CONSOLE_HISTORY_LINES
@@ -48,8 +23,4 @@ menuconfig HTD_CONSOLE_ENABLE
             int "The command line size for shell"
             range 32 256
             default 48
-            
-        config HTD_CONSOLE_PRINTF_SUPPORT_FLOAT
-            bool "Support float fmt print."
-            default n
     endif
